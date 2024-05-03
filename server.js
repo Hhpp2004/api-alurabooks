@@ -2,7 +2,7 @@ const fs = require('fs')
 const bodyParser = require('body-parser')
 const jsonServer = require('json-server')
 const jwt = require('jsonwebtoken')
-
+const https = require('https')
 const server = jsonServer.create()
 const router = jsonServer.router('./database.json')
 let userdb = JSON.parse(fs.readFileSync('./usuarios.json', 'UTF-8'))
@@ -356,8 +356,23 @@ server.use(/^(?!\/(public|livros|autores|categorias)).*$/, (req, res, next) => {
   }
 })
 
+server.get ('/public/docs',(req,res) =>{
+  const meuHtml = `
+  <h1>Documentação da API</h1>
+  <ul>
+  <li>GET /livros</li>
+  <li>POST /livros</li>
+  <li>GET /categorias</li>
+  </ul>
+  `
+  res.status(200).contentType("text/html").send(meuHtml)
+})
+
+
 server.use(router)
 
+
+
 server.listen(8000, () => {
-  console.log("API disponível em http://localhost:8000")
+  console.log("API disponível em https://localhost:8000")
 })
